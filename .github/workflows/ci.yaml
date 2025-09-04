@@ -9,12 +9,14 @@ on:
       - app.py
       - requirements.txt
       - templates/index.html
+      - .github/workflows/ci.yaml
   pull_request:
     paths:
       - Dockerfile
       - app.py
       - requirements.txt
       - templates/index.html
+      - .github/workflows/ci.yaml
   workflow_dispatch:
 
 env:
