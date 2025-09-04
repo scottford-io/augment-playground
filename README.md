@@ -1,13 +1,23 @@
-# Simple Python Web App
+# Augment Playground: Flask Web Application
 
-A simple Python Flask web application that demonstrates building applications with natural language using Augment Code.
+This repository serves as a practical demonstration of using Augment Code to rapidly develop web applications through natural language programming. The project showcases how developers can describe their requirements in plain English and generate a complete, production-ready Flask application with Docker containerization.
 
-## Features
+## What This Demonstrates
 
-- Clean, responsive web interface
-- Displays custom header and message
-- Runs in Docker container
-- Listens on port 8888
+- **Natural Language Development**: Built entirely using conversational instructions with Augment Code
+- **Complete Application Stack**: Flask backend, HTML templates, Docker containerization, and CI/CD pipeline
+- **Best Practices**: Proper project structure, dependency management, and deployment configuration
+- **Rapid Prototyping**: From concept to running application in minutes, not hours
+
+## Key Features Generated
+
+- Responsive Flask web application
+- Docker containerization with multi-stage builds
+- GitHub Actions CI/CD pipeline
+- Comprehensive documentation and setup instructions
+- Production-ready configuration
+
+This example illustrates the power of AI-assisted development for creating functional web applications quickly while maintaining code quality and industry standards.
 
 ## Running the Application
 
