@@ -78,13 +78,9 @@ jobs:
       - name: Resolve image reference
         id: imgref
         run: |
-          # Prefer the SHA tag for a stable reference
-          IMG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}"
-          # If metadata-action didn't produce that tag (e.g. fork), fall back to 'latest'
-          if ! docker image inspect "$IMG" > /dev/null 2>&1; then
-            IMG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          fi
-          echo "image_ref=$IMG" >> "$GITHUB_OUTPUT"
+          # Use the first tag from docker/metadata-action output (e.g., sha-3f1336a)
+          first_tag="$(echo '${{ steps.meta.outputs.tags }}' | tr ' ' '\n' | head -n1)"
+          echo "image_ref=${first_tag}" >> "$GITHUB_OUTPUT"
 
       # --- Get the exact image ID (for cnspec) ---
       - name: Get image ID
