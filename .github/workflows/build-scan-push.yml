@@ -73,3 +73,43 @@ jobs:
       # Optional: show the local image list for debugging
       - name: List images
         run: docker images --digests
+
+      # --- Determine a concrete tag for local image reference ---
+      - name: Resolve image reference
+        id: imgref
+        run: |
+          # Prefer the SHA tag for a stable reference
+          IMG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}"
+          # If metadata-action didn't produce that tag (e.g. fork), fall back to 'latest'
+          if ! docker image inspect "$IMG" > /dev/null 2>&1; then
+            IMG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          fi
+          echo "image_ref=$IMG" >> "$GITHUB_OUTPUT"
+
+      # --- Get the exact image ID (for cnspec) ---
+      - name: Get image ID
+        id: imageid
+        run: |
+          IMAGE_ID=$(docker inspect --format='{{.Id}}' "${{ steps.imgref.outputs.image_ref }}")
+          echo "id=$IMAGE_ID" >> "$GITHUB_OUTPUT"
+
+      # Smoke deploy the container and require exit 0
+      - name: Smoke run (must exit 0)
+        run: |
+          set -euo pipefail
+          docker run --rm "${{ steps.imgref.outputs.image_ref }}" ${{ env.SMOKE_TEST_CMD }}
+
+      # --- Rebuild for push (or just push the already-built image) ---
+      # We push using buildx for reproducibility and to attach labels/metadata.
+      # If you prefer to re-use the local image, you can 'docker push' tags directly.
+      - name: Build & Push to GHCR
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Output image digest
+        run: echo "Pushed digest ${{ steps.build_local.outputs.digest || 'see build&push logs' }}"
