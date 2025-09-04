@@ -56,12 +56,15 @@ Once running, open your browser and navigate to:
 
 ```
 .
-├── app.py              # Main Flask application
-├── requirements.txt    # Python dependencies
-├── Dockerfile         # Docker configuration
-├── docker-compose.yml # Docker Compose configuration
+├── .github/
+│   └── workflows/
+│       └── build-scan-push.yml    # GitHub Actions CI/CD pipeline
 ├── templates/
 │   └── index.html     # HTML template
+├── app.py             # Main Flask application
+├── requirements.txt   # Python dependencies
+├── Dockerfile         # Docker configuration
+├── docker-compose.yml # Docker Compose configuration
 └── README.md          # This file
 ```
 

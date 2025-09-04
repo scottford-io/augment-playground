@@ -9,14 +9,14 @@ on:
       - app.py
       - requirements.txt
       - templates/index.html
-      - .github/workflows/ci.yaml
+      - .github/workflows/build-scan-push.yml
   pull_request:
     paths:
       - Dockerfile
       - app.py
       - requirements.txt
       - templates/index.html
-      - .github/workflows/ci.yaml
+      - .github/workflows/build-scan-push.yml
   workflow_dispatch:
 
 env:
