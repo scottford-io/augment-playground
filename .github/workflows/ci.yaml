@@ -2,8 +2,20 @@ name: ci
 
 on:
   push:
+    branches:
+      - main
     paths:
       - Dockerfile
+      - app.py
+      - requirements.txt
+      - templates/index.html
+  pull_request:
+    paths:
+      - Dockerfile
+      - app.py
+      - requirements.txt
+      - templates/index.html
+  workflow_dispatch:
 
 env:
   APP: a-flask-of-py
