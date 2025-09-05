@@ -90,10 +90,28 @@ jobs:
           echo "id=$IMAGE_ID" >> "$GITHUB_OUTPUT"
 
       # Smoke deploy the container and require exit 0
-      - name: Smoke run (must exit 0)
+      - name: Smoke test Flask container
         run: |
           set -euo pipefail
-          docker run --rm "${{ steps.imgref.outputs.image_ref }}" ${{ env.SMOKE_TEST_CMD }}
+
+          echo "Starting container in detached mode..."
+          CONTAINER_ID=$(docker run -d -p 8888:8888 "${{ steps.imgref.outputs.image_ref }}")
+
+          echo "Waiting for container to start..."
+          for i in {1..10}; do
+            if curl -sSf http://localhost:8888/health > /dev/null; then
+              echo "Health endpoint is responding!"
+              break
+            fi
+            echo "Attempt $i: Waiting for app to become healthy..."
+            sleep 2
+          done
+
+          # Final check: Fail if /health never came up
+          curl -sSf http://localhost:8888/health
+
+          echo "Stopping container..."
+          docker stop "$CONTAINER_ID"
 
       # --- Rebuild for push (or just push the already-built image) ---
       # We push using buildx for reproducibility and to attach labels/metadata.
